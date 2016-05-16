@@ -3,28 +3,31 @@ var app = angular.module('campusCrunch',['ngRoute', 'campusControllers']);
 app.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
-      when('/test-a', {
-        templateUrl: 'partials/test-a.html',
-        controller: 'ControllerA'
+      when('/campus-list', {
+        templateUrl: 'partials/campus_list.html',
+        controller: 'CampusList'
       }).
-      when('/test-b', {
-        templateUrl: 'partials/test-b.html',
-        controller: 'ControllerB'
+      when('/campus-show', {
+        templateUrl: 'partials/campus_show.html',
+        controller: 'CampusShow'
       }).
       otherwise({
-        redirectTo: '/test-a'
+        redirectTo: '/campus-list'
       });
   }]);
 
 var campusControllers = angular.module('campusControllers', [])
 
-campusControllers.controller('ControllerA', function($scope) {
+campusControllers.controller('CampusList', function($scope, $http) {
+  $http.get('campuses.json').success(function(data) {
+    $scope.campuses = data;
+  });
 
   $scope.test = "THIS SHIT WORKED!";
 
 });
 
-campusControllers.controller('ControllerB', function($scope) {
+campusControllers.controller('CampusShow', function($scope) {
 
   $scope.test = "THIS SHIT REALLLLLYYYY WORKED!";
 

@@ -1,0 +1,22 @@
+[
+  {
+    "name": "University of North Carolina",
+    "img": "images/unc.jpg"
+  },
+  {
+    "name": "College of Charleston",
+    "img": "images/cofc.jpg"
+  },
+  {
+    "name": "University of Georgia",
+    "img": "images/uga.jpg"
+  },
+  {
+    "name": "Eastern Carolina University",
+    "img": "images/ecu.jpg"
+  },
+  {
+    "name": "Clemson University",
+    "img": "images/clemson.jpg"
+  }
+]
