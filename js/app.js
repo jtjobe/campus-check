@@ -1,4 +1,4 @@
-var app = angular.module('campusCrunch',['ngRoute']);
+var app = angular.module('campusCrunch',['ngRoute', 'campusControllers']);
 
 app.config(['$routeProvider',
   function($routeProvider) {
@@ -16,15 +16,15 @@ app.config(['$routeProvider',
       });
   }]);
 
+var campusControllers = angular.module('campusControllers', [])
 
-
-app.controller('ControllerA', function($scope) {
+campusControllers.controller('ControllerA', function($scope) {
 
   $scope.test = "THIS SHIT WORKED!";
 
 });
 
-app.controller('ControllerB', function($scope) {
+campusControllers.controller('ControllerB', function($scope) {
 
   $scope.test = "THIS SHIT REALLLLLYYYY WORKED!";
 
