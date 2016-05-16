@@ -1,0 +1,7 @@
+// var campusFilters = angular.module('campusFilters', []);
+
+// campusFilters.filter('filterName', function(){
+//   return function(input){
+//     console.log('CALLED' + input);
+//   }
+// })

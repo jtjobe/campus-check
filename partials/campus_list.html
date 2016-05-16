@@ -1,9 +1,20 @@
 <h1>TEST A</h1>
 
-<div ng-controller="CampusList">
-  <ul>
-    <li ng-repeat="campus in campuses">
-      <p>{{ campus.name }}</p>
-    </li>
-  </ul>
+<div ng-controller="campusList">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="sidebar">
+        <label>School Name</label>
+        <br>
+        <input type="text" ng-model="name" ng-change="filterName"></input>
+      </div>
+    </div>
+    <div class="col-md-9">
+      <p>{{ name }}</p>
+      <div ng-repeat="campus in campuses">
+        <p>{{ campus.name }}</p>
+        <a href="#/campuses/{{ campus.id }}">Campus Show</a>
+      </div>
+    </div>
+  </div>
 </div>
