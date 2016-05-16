@@ -19,9 +19,17 @@ app.config(['$routeProvider',
 var campusControllers = angular.module('campusControllers', [])
 
 campusControllers.controller('campusList', ['$scope','$http', function($scope, $http) {
+  
   $http.get('campuses.json').success(function(data) {
     $scope.campuses = data;
   });
+
+  $scope.filterNames = function(){
+
+  }
+
+
+
 }]);
 
 campusControllers.controller('campusShow', ['$scope','$routeParams', function($scope, $routeParams) {
@@ -29,3 +37,4 @@ campusControllers.controller('campusShow', ['$scope','$routeParams', function($s
   $scope.campusId = $routeParams.campusId;
 
 }]);
+

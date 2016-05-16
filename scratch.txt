@@ -1,7 +1,145 @@
-// var campusFilters = angular.module('campusFilters', []);
+var EmployeeSearch = angular.module('EmployeeSearch', []);
 
-// campusFilters.filter('filterName', function(){
-//   return function(input){
-//     console.log('CALLED' + input);
-//   }
-// })
+EmployeeSearch.value('MAX_RECORDS_SHOWN', 10);
+
+EmployeeSearch.service('employeeData', function ($http) {
+
+  function createFullName (firstName, lastName) {
+    var result = "";
+
+    result += (lastName.length ? lastName + ', ' : '');
+    result += firstName;
+
+    return result;
+  }
+
+  var publicMethods = {};
+
+  publicMethods.get = function (callback) {
+    // Make HTTP Call
+    $http.get('data/employees.json').then(function (result) {
+      // Call the callback with just the data
+      callback(result.data.map(function (employee) {
+        employee.fullName = createFullName(employee.firstName, employee.lastName);
+        return employee;
+      }));
+    });
+  };
+
+  return publicMethods;
+});
+
+EmployeeSearch.service('colorService', function () {
+  var colorArray = ['343D4D', 'A3B9C9', '211E2B', 'EDF2EF', '131217'];
+
+  function createStringCharSum (string) {
+    return string.split('').reduce(function (count, current) {
+      return count + current.charCodeAt();
+    }, 0);
+  }
+
+  var publicMethods = {};
+
+  publicMethods.getColorCombo = function (randomizer) {
+    var result = {
+      background : null,
+      text: null
+    };
+    var offset = (createStringCharSum(randomizer) % colorArray.length);
+    
+    result.background = colorArray[offset];
+    result.text = colorArray[(offset+1 === colorArray.length ? 1 : offset+1)];
+
+    return result;
+  };
+
+  return publicMethods;
+});
+
+EmployeeSearch.directive('esPhoto', function (colorService) {
+
+  function getImageUrl (employee) {
+    var colors = colorService.getColorCombo(employee.fullName);
+    var result = 'http://dummyimage.com/50x50/'+colors.background+'/'+colors.text+'&text=';
+
+    result += employee.firstName.slice(0, 1);
+    result += employee.lastName.slice(0, 1);
+
+    return result;
+  }
+
+  return {
+    restrict: 'E',
+    scope: {
+      employee : '='
+    },
+    template: '<img ng-src="{{url}}" title="{{name}}" />',
+    link: function (scope, element, attributes) {
+      scope.url = getImageUrl(scope.employee);
+    }
+  }
+});
+
+EmployeeSearch.filter('telephone', function() {
+  function formatTelephoneNumber (number) {
+    var result = '',
+      digits = number.replace(/[\D]/g, '').split(''),
+      region = digits.slice(0,3).join(''),
+      area = digits.slice(3,6).join(''),
+      code = digits.slice(5).join('');
+
+    result += '(' + region + ')';
+    result += ' ' + area;
+    result += '-' + code;
+
+    return result;
+  }
+
+  return function(input) {
+    return formatTelephoneNumber(input);
+  };
+});
+
+EmployeeSearch.filter('employment', function(filterService) {
+  return function(employees) {
+    return employees.filter(function (employee) {
+      return (filterService.showAll || employee.employed);
+    })
+  };
+});
+
+EmployeeSearch.service('filterService', function () {
+  var publicMethods = {
+    showAll: false,
+    limitResults: true
+  };
+
+  return publicMethods;
+});
+
+EmployeeSearch.controller('MainController', function ($scope, MAX_RECORDS_SHOWN, employeeData, filterService) {
+  $scope.filters = filterService;
+  $scope.MAX_RECORDS_SHOWN = MAX_RECORDS_SHOWN;
+  $scope.Math = window.Math;
+
+  $scope.versions = [
+    { name: 'Vanilla JavaScript', path: '../vanilla/' },
+    { name: 'jQuery', path: '../jquery/' },
+    { name: 'AngularJS', path: '../angular/' }
+  ];
+  $scope.currentVersion = $scope.versions[2];
+  
+  $scope.$watch('currentVersion', function (newVersion, oldVersion) {
+    if (oldVersion && (newVersion.path !== oldVersion.path)) {
+      window.location = newVersion.path;
+    }
+  });
+
+  // Request Data
+  employeeData.get(function (data) {
+    // Add it to the scope
+    $scope.employees = data;
+
+    console.log('Initialization Complete');
+  });
+});

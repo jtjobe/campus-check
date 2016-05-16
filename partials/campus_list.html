@@ -6,11 +6,11 @@
       <div class="sidebar">
         <label>School Name</label>
         <br>
-        <input type="text" ng-model="name" ng-change="filterName"></input>
+        <input type="text" ng-model="schoolName" ng-change="filterNames()"></input>
       </div>
     </div>
     <div class="col-md-9">
-      <p>{{ name }}</p>
+      <p>{{ schoolName }}</p>
       <div ng-repeat="campus in campuses">
         <p>{{ campus.name }}</p>
         <a href="#/campuses/{{ campus.id }}">Campus Show</a>
